@@ -17,6 +17,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // Do any additional setup after loading the view.
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let userDefaults = UserDefaults.standard
+        
+        //"add"というキーで保存された値がなにかある -> 値をtaskArrayへ
+        if userDefaults.object(forKey: "add") != nil {
+            todoList = userDefaults.object(forKey: "add") as! [String]
+        }
+        //tableViewを更新
+        tableView.reloadData()
+    }
     
     @IBAction func addBtnAction(_ sender: Any) {
         let alertController = UIAlertController(title: "ToDo追加", message: "ToDoを入力してください。", preferredStyle: UIAlertController.Style.alert)
@@ -26,6 +37,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             if let textField = alertController.textFields?.first {
                 self.todoList.insert(textField.text!, at: 0)
                 self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableView.RowAnimation.right)
+                //保存機能を入れる
             }
         }
         alertController.addAction(okAction)
@@ -54,6 +66,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if editingStyle == UITableViewCell.EditingStyle.delete {
             todoList.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath as IndexPath], with: UITableView.RowAnimation.automatic)
+            
         }
     }
     
